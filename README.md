@@ -14,7 +14,7 @@ JAGDAMBA TEXTILES is a full-stack Python-based textile e-commerce platform desig
 ## 🛠 Tech Stack
 - Backend: Python, Flask
 - Auth: JWT
-- Database: MySQL
+- Database: SQLite
 - ORM: SQLAlchemy
 - Server: Gunicorn
 - Frontend: HTML, CSS, Bootstrap
