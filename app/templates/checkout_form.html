@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div
+    style="max-width: 600px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <h1 style="font-family: var(--font-serif); margin-bottom: 2rem; text-align: center;">Checkout</h1>
+
+    <div style="margin-bottom: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 4px;">
+        <h3>Order Summary</h3>
+        <p>Total Amount: <strong>₹{{ total_amount }}</strong></p>
+    </div>
+
+    <form action="" method="post">
+        <div style="margin-bottom: 1.5rem;">
+            <label for="address" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Shipping
+                Address</label>
+            <textarea id="address" name="address" required rows="4"
+                style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to Payment</button>
+    </form>
+</div>
+{% endblock %}

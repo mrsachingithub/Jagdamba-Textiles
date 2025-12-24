@@ -1,0 +1,25 @@
+import os
+from dotenv import load_dotenv
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'jagdamba-textiles-secret-key-5062'
+    
+    # Database Configuration
+    # Fallback to SQLite if DATABASE_URL is not set, for local development ease
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
+    
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Razorpay Configuration
+    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID') or 'rzp_test_ojEQMRqicJHXZA'
+    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET') or 'FcMsqqe7clM7M4KxKi4Ll0Ah'
+    
+    # Business Info
+    BUSINESS_NAME = "Jagdamba Textiles"
+    BUSINESS_ADDRESS = "Jagdamba Textiles 5062, New Pashupati Market, Ring Road, Surat, India – 395004"
+    BUSINESS_INSTAGRAM = "https://instagram.com/jagdamba_textile_5062"
+    BUSINESS_FACEBOOK = "#" # Update when link provided

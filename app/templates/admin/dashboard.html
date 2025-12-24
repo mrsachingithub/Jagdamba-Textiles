@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h1 style="font-family: var(--font-serif);">Admin Dashboard</h1>
+    <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+        <div
+            style="background: white; padding: 2rem; border-radius: 8px; flex: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <h3>Total Products</h3>
+            <p style="font-size: 2rem; font-weight: 700;">{{ products_count }}</p>
+            <a href="{{ url_for('admin.products') }}">Manage Products</a>
+        </div>
+        <div
+            style="background: white; padding: 2rem; border-radius: 8px; flex: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <h3>Total Orders</h3>
+            <p style="font-size: 2rem; font-weight: 700;">{{ orders_count }}</p>
+            <a href="{{ url_for('admin.orders') }}">View Orders</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

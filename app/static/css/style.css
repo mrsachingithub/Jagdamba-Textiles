@@ -1,0 +1,21 @@
+/* Main CSS File */
+/* Much of the critical CSS is currently in base.html for performance/simplicity in this setup, 
+   but this file is linked and can be used for more extensive styles */
+
+/* Hover Effects */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Form Styles Override */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+}
+
+/* Card Animations */
+.product-card:hover {
+    transform: translateY(-5px);
+}

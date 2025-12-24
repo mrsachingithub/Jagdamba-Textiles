@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div
+    style="max-width: 500px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;">
+    <h1 style="font-family: var(--font-serif); margin-bottom: 1rem;">Payment</h1>
+    <p>Complete your payment securely with Razorpay.</p>
+
+    <div style="margin: 2rem 0;">
+        <h2>₹{{ order.total_amount }}</h2>
+    </div>
+
+    <button id="rzp-button1" class="btn btn-primary" style="width: 100%;">Pay Now</button>
+
+    <form action="{{ url_for('cart.payment_success') }}" method="POST" id="payment-form">
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+    </form>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ key_id }}",
+        "amount": "{{ payment.amount }}",
+        "currency": "INR",
+        "name": "Jagdamba Textiles",
+        "description": "Order #{{ order.id }}",
+        "image": "{{ url_for('static', filename='img/logo.png') }}", // Optional logo
+        "order_id": "{{ payment.id }}",
+        "handler": function (response) {
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            document.getElementById('payment-form').submit();
+        },
+        "prefill": {
+            "name": "{{ current_user.username }}",
+            "email": "{{ current_user.email }}"
+        },
+        "theme": {
+            "color": "#c5a059"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+{% endblock %}

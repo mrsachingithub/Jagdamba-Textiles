@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }} - Jagdamba Textiles{% else %}Jagdamba Textiles{% endif %}</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23c5a059%22>JT</text></svg>">
+
+    <style>
+        /* Base Critical Styles */
+        :root {
+            --primary-color: #1a1a1a;
+            --accent-color: #c5a059;
+            /* Gold */
+            --light-bg: #f8f9fa;
+            --text-color: #333;
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Flashes */
+        .flash-messages {
+            padding: 1rem 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer h3 {
+            font-family: var(--font-serif);
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer p,
+        .footer a {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Utilities */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('main.index') }}" class="nav-brand">Jagdamba Textiles</a>
+        <div class="nav-links">
+            <a href="{{ url_for('main.index') }}" class="nav-item">Home</a>
+            <a href="{{ url_for('main.shop') }}" class="nav-item">Shop</a>
+            <a href="{{ url_for('main.collections') }}" class="nav-item">Collections</a>
+            <a href="{{ url_for('main.about') }}" class="nav-item">About</a>
+        </div>
+        <div class="nav-icons">
+            <a href="{{ url_for('cart.view_cart') }}"><i class="fas fa-shopping-cart"></i></a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.my_orders') }}" class="nav-item">My Orders</a>
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.dashboard') }}" class="nav-item">Admin</a>
+            {% endif %}
+            <a href="{{ url_for('auth.logout') }}" class="nav-item">Logout</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="nav-item">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-message">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h3>Jagdamba Textiles</h3>
+                <p>Leading provider of premium fabrics including Georgette, Velvet, Satin, and more.</p>
+            </div>
+            <div>
+                <h3>Contact Us</h3>
+                <p>Jagdamba Textiles 5062, New Pashupati Market,<br>Ring Road, Surat, India – 395004</p>
+                <p>Email: contact@jagdambatextiles.com</p>
+            </div>
+            <div>
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://instagram.com/jagdamba_textile_5062" target="_blank"><i
+                            class="fab fa-instagram"></i> Instagram</a><br>
+                    <a href="#" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <h1 style="font-family: var(--font-serif); margin-bottom: 2rem;">My Orders</h1>
+
+    {% if orders %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa; text-align: left;">
+                    <th style="padding: 1rem; border-bottom: 2px solid #dee2e6;">Order #</th>
+                    <th style="padding: 1rem; border-bottom: 2px solid #dee2e6;">Date</th>
+                    <th style="padding: 1rem; border-bottom: 2px solid #dee2e6;">Total</th>
+                    <th style="padding: 1rem; border-bottom: 2px solid #dee2e6;">Status</th>
+                    <th style="padding: 1rem; border-bottom: 2px solid #dee2e6;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 1rem;">#{{ order.id }}</td>
+                    <td style="padding: 1rem;">{{ order.created_at.strftime('%d %b %Y') }}</td>
+                    <td style="padding: 1rem; font-weight: 600;">₹{{ order.total_amount }}</td>
+                    <td style="padding: 1rem;">
+                        <span
+                            style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; 
+                                     background: {% if order.status == 'Paid' %}#d4edda{% elif order.status == 'Pending' %}#fff3cd{% else %}#f8d7da{% endif %}; 
+                                     color: {% if order.status == 'Paid' %}#155724{% elif order.status == 'Pending' %}#856404{% else %}#721c24{% endif %};">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <a href="#" style="color: var(--accent-color);">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <p style="font-size: 1.2rem; color: #666; margin-bottom: 1.5rem;">You haven't placed any orders yet.</p>
+        <a href="{{ url_for('main.shop') }}" class="btn btn-primary">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
