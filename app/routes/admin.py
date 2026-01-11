@@ -85,3 +85,13 @@ def messages():
 def order_details(id):
     order = Order.query.get_or_404(id)
     return render_template('admin/order_details.html', order=order)
+
+@bp.route('/admin/message/<int:id>/read')
+@login_required
+@admin_required
+def mark_message_read(id):
+    message = ContactMessage.query.get_or_404(id)
+    message.is_read = True
+    db.session.commit()
+    flash('Message marked as read.', 'success')
+    return redirect(url_for('admin.messages'))

@@ -12,19 +12,31 @@
                     <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Name</th>
                     <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Email</th>
                     <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Message</th>
+                    <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for message in messages.items %}
-                <tr style="border-bottom: 1px solid #eee;">
+                <tr
+                    style="border-bottom: 1px solid #eee; {% if not message.is_read %}background-color: #fff3cd; font-weight: bold;{% endif %}">
                     <td style="padding: 1rem;">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td style="padding: 1rem;">{{ message.name }}</td>
                     <td style="padding: 1rem;">{{ message.email }}</td>
                     <td style="padding: 1rem; max-width: 400px;">{{ message.message }}</td>
+                    <td style="padding: 1rem;">
+                        {% if not message.is_read %}
+                        <a href="{{ url_for('admin.mark_message_read', id=message.id) }}" class="btn"
+                            style="background-color: #28a745; color: white; padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="fas fa-check"></i> Mark Read
+                        </a>
+                        {% else %}
+                        <span style="color: #6c757d;"><i class="fas fa-check-double"></i> Read</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4" style="padding: 2rem; text-align: center;">No messages found.</td>
+                    <td colspan="5" style="padding: 2rem; text-align: center;">No messages found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
