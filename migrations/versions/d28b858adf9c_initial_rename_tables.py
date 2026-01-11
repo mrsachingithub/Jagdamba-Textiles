@@ -94,20 +94,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['product_variant_id'], ['jagdamba_product_variant.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.drop_table('category')
-    op.drop_table('order_item')
-    op.drop_table('product_variant')
-    with op.batch_alter_table('user', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_user_email'))
-        batch_op.drop_index(batch_op.f('ix_user_username'))
-
-    op.drop_table('user')
-    op.drop_table('contact_message')
-    with op.batch_alter_table('product', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_product_name'))
-
-    op.drop_table('product')
-    op.drop_table('order')
     # ### end Alembic commands ###
 
 
