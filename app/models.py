@@ -7,6 +7,7 @@ import jwt
 import time
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'jagdamba_user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
@@ -43,6 +44,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 class Category(db.Model):
+    __tablename__ = 'jagdamba_category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False) # e.g., Georgette, Velvet
     image_url = db.Column(db.String(256)) # Optional representative image
@@ -52,13 +54,14 @@ class Category(db.Model):
         return f'<Category {self.name}>'
 
 class Product(db.Model):
+    __tablename__ = 'jagdamba_product'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True, nullable=False)
     description = db.Column(db.Text)
     base_price = db.Column(db.Float, nullable=False)
     fabric_type = db.Column(db.String(64)) # Could be redundant if Category is fabric, but allows flexibility
     width = db.Column(db.String(32)) # e.g., "44 inches", "58 inches"
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('jagdamba_category.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     variants = db.relationship('ProductVariant', backref='product', lazy='dynamic', cascade="all, delete-orphan")
 
@@ -66,8 +69,9 @@ class Product(db.Model):
         return f'<Product {self.name}>'
 
 class ProductVariant(db.Model):
+    __tablename__ = 'jagdamba_product_variant'
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('jagdamba_product.id'), nullable=False)
     color_name = db.Column(db.String(64), nullable=False)
     hex_code = db.Column(db.String(16)) # Optional for UI color swatch
     image_url = db.Column(db.String(256), nullable=False)
@@ -77,8 +81,9 @@ class ProductVariant(db.Model):
         return f'<Variant {self.color_name} of {self.product_id}>'
 
 class Order(db.Model):
+    __tablename__ = 'jagdamba_order'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('jagdamba_user.id'), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(32), default='Pending') # Pending, Paid, Shipped, Delivered, Cancelled
     razorpay_order_id = db.Column(db.String(100))
@@ -91,9 +96,10 @@ class Order(db.Model):
         return f'<Order {self.id}>'
 
 class OrderItem(db.Model):
+    __tablename__ = 'jagdamba_order_item'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
-    product_variant_id = db.Column(db.Integer, db.ForeignKey('product_variant.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('jagdamba_order.id'), nullable=False)
+    product_variant_id = db.Column(db.Integer, db.ForeignKey('jagdamba_product_variant.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
     price_at_purchase = db.Column(db.Float, nullable=False)
 
@@ -106,6 +112,7 @@ class OrderItem(db.Model):
         return "Unknown Product"
 
 class ContactMessage(db.Model):
+    __tablename__ = 'jagdamba_contact_message'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)

@@ -10,6 +10,90 @@
         <h2>₹{{ order.total_amount }}</h2>
     </div>
 
+    {% if payment.id.startswith('order_mock') %}
+    <div id="mock-payment-form" style="text-align: left; max-width: 400px; margin: 0 auto;">
+        <div class="alert alert-warning"
+            style="background: #fff3cd; color: #856404; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem;">
+            <strong>Test Mode:</strong> Payment gateway is unavailable. Use valid format test data.
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">Card Number</label>
+            <input type="text" id="card-number" placeholder="1234 5678 1234 5678" maxlength="19"
+                style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            <small style="color: #666;">Enter 16 digits</small>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">Card Holder Name</label>
+            <input type="text" id="card-name" placeholder="John Doe"
+                style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 0.5rem;">Expiry (MM/YY)</label>
+                <input type="text" id="card-expiry" placeholder="12/28" maxlength="5"
+                    style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 0.5rem;">CVV</label>
+                <input type="password" id="card-cvv" placeholder="123" maxlength="3"
+                    style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+        </div>
+
+        <button id="mock-pay-btn" class="btn btn-primary" style="width: 100%;">Pay Now (Mock)</button>
+        <div id="validation-error" style="color: red; margin-top: 1rem; display: none;"></div>
+    </div>
+
+    <form action="{{ url_for('cart.payment_success') }}" method="POST" id="payment-form">
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="mock_payment_success">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="{{ order.razorpay_order_id }}">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="mock_signature">
+    </form>
+
+    <script>
+        document.getElementById('mock-pay-btn').addEventListener('click', function () {
+            var cardNum = document.getElementById('card-number').value.replace(/\s/g, '');
+            var name = document.getElementById('card-name').value;
+            var expiry = document.getElementById('card-expiry').value;
+            var cvv = document.getElementById('card-cvv').value;
+            var errorDiv = document.getElementById('validation-error');
+
+            // Format check
+            if (!/^\d{16}$/.test(cardNum)) {
+                errorDiv.textContent = "Invalid Card Number: Must be 16 digits.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (name.trim().length === 0) {
+                errorDiv.textContent = "Please enter Card Holder Name.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                errorDiv.textContent = "Invalid Expiry: Use MM/YY format.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (!/^\d{3}$/.test(cvv)) {
+                errorDiv.textContent = "Invalid CVV: Must be 3 digits.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // If valid, submit form
+            document.getElementById('payment-form').submit();
+        });
+
+        // Simple formatter for card number
+        document.getElementById('card-number').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+    </script>
+
+    {% else %}
     <button id="rzp-button1" class="btn btn-primary" style="width: 100%;">Pay Now</button>
 
     <form action="{{ url_for('cart.payment_success') }}" method="POST" id="payment-form">
@@ -17,36 +101,37 @@
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
         <input type="hidden" name="razorpay_signature" id="razorpay_signature">
     </form>
-</div>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    var options = {
-        "key": "{{ key_id }}",
-        "amount": "{{ payment.amount }}",
-        "currency": "INR",
-        "name": "Jagdamba Textiles",
-        "description": "Order #{{ order.id }}",
-        "image": "{{ url_for('static', filename='img/logo.png') }}", // Optional logo
-        "order_id": "{{ payment.id }}",
-        "handler": function (response) {
-            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-            document.getElementById('razorpay_signature').value = response.razorpay_signature;
-            document.getElementById('payment-form').submit();
-        },
-        "prefill": {
-            "name": "{{ current_user.username }}",
-            "email": "{{ current_user.email }}"
-        },
-        "theme": {
-            "color": "#c5a059"
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ key_id }}",
+            "amount": "{{ payment.amount }}",
+            "currency": "INR",
+            "name": "Jagdamba Textiles",
+            "description": "Order #{{ order.id }}",
+            "image": "{{ url_for('static', filename='img/logo.png') }}", // Optional logo
+            "order_id": "{{ payment.id }}",
+            "handler": function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('payment-form').submit();
+            },
+            "prefill": {
+                "name": "{{ current_user.username }}",
+                "email": "{{ current_user.email }}"
+            },
+            "theme": {
+                "color": "#c5a059"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
         }
-    };
-    var rzp1 = new Razorpay(options);
-    document.getElementById('rzp-button1').onclick = function (e) {
-        rzp1.open();
-        e.preventDefault();
-    }
-</script>
+    </script>
+    {% endif %}
+</div>
 {% endblock %}
