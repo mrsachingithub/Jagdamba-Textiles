@@ -31,4 +31,15 @@ def create_app(config_class=Config):
     def health():
         return "Jagdamba Textiles App is Running!"
 
+    # Context Processor for unread messages
+    @app.context_processor
+    def inject_unread_count():
+        from flask_login import current_user
+        if not current_user.is_authenticated or not current_user.is_admin:
+            return dict(unread_messages_count=0)
+        
+        from app.models import ContactMessage
+        count = ContactMessage.query.filter_by(is_read=False).count()
+        return dict(unread_messages_count=count)
+
     return app

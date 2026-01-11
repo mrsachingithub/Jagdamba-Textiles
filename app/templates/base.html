@@ -32,7 +32,12 @@
             <a href="{{ url_for('main.my_orders') }}" class="nav-item">My Orders</a>
             {% if current_user.is_admin %}
             <a href="{{ url_for('admin.dashboard') }}" class="nav-item">Admin</a>
-            <a href="{{ url_for('admin.messages') }}" class="nav-item">Messages</a>
+            <a href="{{ url_for('admin.messages') }}" class="nav-item">
+                Messages
+                {% if unread_messages_count > 0 %}
+                <span class="badge">{{ unread_messages_count }}</span>
+                {% endif %}
+            </a>
             {% endif %}
             <a href="{{ url_for('auth.logout') }}" class="nav-item">Logout</a>
             {% else %}
