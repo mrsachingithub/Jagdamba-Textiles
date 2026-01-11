@@ -8,5 +8,5 @@ pip install -r requirements.txt
 # Run migrations
 flask db upgrade
 
-# Seed database (optional, only if needed and safe)
-# python seed_data.py
+# Seed database (Create admin user if missing)
+python create_db.py
