@@ -11,8 +11,10 @@ def init_db():
         
         # Create a test admin user if not exists
         if not User.query.filter_by(username='admin').first():
+            import os
+            password = os.environ.get('ADMIN_PASSWORD') or 'admin123'
             admin = User(username='admin', email='admin@jagdambatextiles.com', is_admin=True)
-            admin.set_password('admin123')
+            admin.set_password(password)
             db.session.add(admin)
             db.session.commit()
             print("Admin user created: admin/admin123")

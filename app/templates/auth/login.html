@@ -22,8 +22,12 @@
             <span style="color: red; font-size: 0.8rem;">[{{ error }}]</span>
             {% endfor %}
         </div>
-        <div style="margin-bottom: 1.5rem;">
-            {{ form.remember_me() }} {{ form.remember_me.label }}
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                {{ form.remember_me() }} {{ form.remember_me.label }}
+            </div>
+            <a href="{{ url_for('auth.reset_password_request') }}"
+                style="color: var(--accent-color); font-size: 0.9rem;">Forgot Password?</a>
         </div>
         <div style="text-align: center;">
             {{ form.submit(class="btn btn-primary", style="width: 100%;") }}

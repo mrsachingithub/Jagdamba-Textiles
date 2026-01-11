@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="padding: 4rem 2rem;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="font-family: var(--font-serif); margin-bottom: 2rem; font-size: 3rem; text-align: center;">Contact Us
+        </h1>
+
+        <p style="font-size: 1.2rem; line-height: 1.8; color: #444; margin-bottom: 2rem; text-align: center;">
+            We'd love to hear from you. Whether you have a question about our fabrics, pricing, or need a custom order,
+            our team is ready to help.
+        </p>
+
+        <div class="grid-2" style="margin: 4rem 0;">
+            <div>
+                <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--accent-color);">Visit Our
+                    Store</h3>
+                <p style="color: #666; line-height: 1.6;">
+                    <strong>Jagdamba Textiles</strong><br>
+                    5062, New Pashupati Market,<br>
+                    Ring Road, Surat, India – 395004
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--accent-color);">Get in
+                        Touch</h3>
+                    <p style="color: #666; line-height: 1.6;">
+                        <strong>Email:</strong> <a href="mailto:jagdambatextiles5062@gmail.com"
+                            style="color: var(--accent-color);">jagdambatextiles5062@gmail.com</a><br>
+                        <strong>Phone:</strong> +91 74887 68874
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div>
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Google Map Embedding (Placeholder) -->
+        <div style="margin-top: 4rem; text-align: center;">
+            <iframe src="https://maps.google.com/maps?q=Hari+Krupa+Market,+Surat&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%" height="400" style="border:0; border-radius: 8px;" allowfullscreen=""
+                loading="lazy"></iframe>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

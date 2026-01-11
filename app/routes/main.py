@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request, current_app, flash, redirect, url_for
 from flask_login import login_required, current_user
-from app.models import Product, Category
+from app.models import Product, Category, ContactMessage
+from app import db
 
 bp = Blueprint('main', __name__)
 
@@ -52,3 +53,39 @@ def collections():
 @bp.route('/about')
 def about():
     return render_template('about.html', title='About Us')
+
+from flask import Blueprint, render_template, request, current_app, flash, redirect, url_for
+
+@bp.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        # In a real application, you would send an email here using Flask-Mail or an external API.
+        # For now, we will just simulate a successful submission.
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        
+        # Save to database
+        msg = ContactMessage(name=name, email=email, message=message)
+        db.session.add(msg)
+        db.session.commit()
+        
+        # Log the message (optional, for debugging)
+        print(f"Contact Form Submission\nName: {name}\nEmail: {email}\nMessage: {message}")
+        
+        flash('Thank you for your message! We will get back to you shortly at jagdambatextiles5062@gmail.com.', 'success')
+        return redirect(url_for('main.contact'))
+        
+    return render_template('contact.html', title='Contact Us')
+
+@bp.route('/order/<int:id>')
+@login_required
+def order_details(id):
+    from app.models import Order
+    order = Order.query.get_or_404(id)
+    # Ensure user owns the order
+    if order.user_id != current_user.id:
+        flash("You do not have permission to view this order.", "danger")
+        return redirect(url_for('main.my_orders'))
+        
+    return render_template('order_details.html', title=f'Order #{order.id}', order=order)

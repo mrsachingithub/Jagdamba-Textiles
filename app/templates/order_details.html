@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="font-family: var(--font-serif); margin: 0;">Order #{{ order.id }}</h1>
+        <span style="padding: 0.5rem 1rem; border-radius: 20px; background: #eee; font-weight: 600;">{{ order.status
+            }}</span>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 2rem;">
+        <div>
+            <h3 style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">Shipping Details</h3>
+            <p style="white-space: pre-wrap; line-height: 1.6; color: #555;">{{ order.shipping_address }}</p>
+        </div>
+        <div>
+            <h3 style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">Order Summary</h3>
+            <p><strong>Date:</strong> {{ order.created_at.strftime('%d %B %Y, %H:%M') }}</p>
+            <p><strong>Total Amount:</strong> <span
+                    style="font-size: 1.2rem; color: var(--accent-color); font-weight: 700;">₹{{ order.total_amount
+                    }}</span></p>
+        </div>
+    </div>
+
+    <h3 style="margin-bottom: 1rem;">Items</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f8f8f8; text-align: left;">
+                <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Product</th>
+                <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Color</th>
+                <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Price</th>
+                <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Quantity</th>
+                <th style="padding: 1rem; border-bottom: 2px solid #ddd;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 1rem;">
+                    {% set variant = item.product_variant_id | int %}
+                    <!-- ideally we would use relationship backref, assuming item.variant exists or similar -->
+                    <!-- In models.py we have a property product_name but let's try to access relationship directly if available or fallback -->
+                    {{ item.product_name }}
+                </td>
+                <td style="padding: 1rem;">
+                    <!-- Hacky way if relationship isn't fully loaded, but OrderItem has product_variant_id -->
+                    <!-- Since we don't have explicit relationship in model shown earlier, rely on product_name helper -->
+                    -
+                </td>
+                <td style="padding: 1rem;">₹{{ item.price_at_purchase }}</td>
+                <td style="padding: 1rem;">{{ item.quantity }} m</td>
+                <td style="padding: 1rem;">₹{{ item.price_at_purchase * item.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('main.my_orders') }}" class="btn" style="border: 1px solid #ddd;">&larr; Back to Orders</a>
+    </div>
+</div>
+{% endblock %}

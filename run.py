@@ -8,7 +8,7 @@ app = create_app()
 # This ensures that even if Render skip build steps, the app works.
 with app.app_context():
     db.create_all()
-    seed_database()
+    seed_database(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,10 +1,12 @@
 from app import create_app, db
 from app.models import User, Category, Product, ProductVariant
 
-app = create_app()
 
-def seed_database():
-    with app.app_context():
+def seed_database(app_instance=None):
+    if app_instance is None:
+        app_instance = create_app()
+    
+    with app_instance.app_context():
         print("Seeding database...")
         
         # Create categories

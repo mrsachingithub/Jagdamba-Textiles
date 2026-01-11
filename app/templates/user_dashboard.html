@@ -31,7 +31,8 @@
                         </span>
                     </td>
                     <td style="padding: 1rem;">
-                        <a href="#" style="color: var(--accent-color);">View Details</a>
+                        <a href="{{ url_for('main.order_details', id=order.id) }}"
+                            style="color: var(--accent-color);">View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

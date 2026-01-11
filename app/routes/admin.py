@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from app.models import Product, Category, ProductVariant, Order
+from app.models import Product, Category, ProductVariant, Order, ContactMessage
 from functools import wraps
 import os
 
@@ -70,3 +70,18 @@ def orders():
     page = request.args.get('page', 1, type=int)
     orders = Order.query.order_by(Order.created_at.desc()).paginate(page=page, per_page=20)
     return render_template('admin/orders.html', orders=orders)
+
+@bp.route('/admin/messages')
+@login_required
+@admin_required
+def messages():
+    page = request.args.get('page', 1, type=int)
+    messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).paginate(page=page, per_page=20)
+    return render_template('admin/messages.html', messages=messages)
+
+@bp.route('/admin/order/<int:id>')
+@login_required
+@admin_required
+def order_details(id):
+    order = Order.query.get_or_404(id)
+    return render_template('admin/order_details.html', order=order)

@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'jagdamba-textiles-secret-key-5062'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-please-change-in-prod'
     
     # Database Configuration
     # Fallback to SQLite if DATABASE_URL is not set, for local development ease
@@ -15,8 +15,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Razorpay Configuration
-    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID') or 'rzp_test_ojEQMRqicJHXZA'
-    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET') or 'FcMsqqe7clM7M4KxKi4Ll0Ah'
+    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
+    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
     
     # Business Info
     BUSINESS_NAME = "Jagdamba Textiles"
